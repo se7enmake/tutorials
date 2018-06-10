@@ -4,9 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class ReadWriteSharedDataSwing {
-	static int value; // shared data
-	//static volatile int value; // fix with volatile
-
+	
 	public static void main(String[] args) {
 		JFrame frame = createFrame();
 		frame.setLayout(new FlowLayout(FlowLayout.LEFT, 30, 5));
@@ -19,12 +17,14 @@ public class ReadWriteSharedDataSwing {
 
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
+		
+		SharedObject sharedObject = new SharedObject();
 
 		Thread thread1 = new Thread(() -> {
 			int temp = 0;
 			while (true) {
-				if (temp != value) {
-					temp = value;
+				if (temp != sharedObject.value) {
+					temp = sharedObject.value;
 					readerProgressUi.update(temp);
 				}
 			}
@@ -32,8 +32,8 @@ public class ReadWriteSharedDataSwing {
 
 		Thread thread2 = new Thread(() -> {
 			for (int i = 1; i <= 100; i++) {
-				value++;
-				writerProgressUi.update(value);
+				sharedObject.value++;
+				writerProgressUi.update(sharedObject.value);
 				try {
 					Thread.sleep(20);
 				} catch (InterruptedException e) {
@@ -42,7 +42,7 @@ public class ReadWriteSharedDataSwing {
 
 				if (i == 100) {
 					i = 1;
-					value = 0;
+					sharedObject.value = 0;
 				}
 			}
 		});

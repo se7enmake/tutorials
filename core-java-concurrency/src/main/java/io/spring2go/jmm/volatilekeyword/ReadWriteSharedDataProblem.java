@@ -2,24 +2,24 @@ package io.spring2go.jmm.volatilekeyword;
 
 public class ReadWriteSharedDataProblem {
 
-	static int value; // shared data
-	//static volatile int value; // volatile to fix
-
 	public static void main(String[] args) {
+		
+		SharedObject sharedObject = new SharedObject();
+		
 		Thread thread1 = new Thread(() -> {
 			int temp = 0;
 			while (true) {
-				if (temp != value) {
-					temp = value;
-					System.out.println("reader: value is = " + value);
+				if (temp != sharedObject.value) {
+					temp = sharedObject.value;
+					System.out.println("reader: value is = " + sharedObject.value);
 				}
 			}
 		});
 
 		Thread thread2 = new Thread(() -> {
 			for (int i = 0; i < 5; i++) {
-				value++;
-				System.out.println("writer: changed value to = " + value);
+				sharedObject.value++;
+				System.out.println("writer: changed value to = " + sharedObject.value);
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
