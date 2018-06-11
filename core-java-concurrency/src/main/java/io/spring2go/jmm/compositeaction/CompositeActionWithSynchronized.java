@@ -1,36 +1,38 @@
 package io.spring2go.jmm.compositeaction;
 
 public class CompositeActionWithSynchronized {
-    static int value;
+	static int value;
 
-    public synchronized static void increment(){
-        value++;
-    }
-    public static void main (String[] args) throws InterruptedException {
+	// 原子排它方法
+	public synchronized static void increment() {
+		value++;
+	}
 
-        for (int t = 0; t < 10; t++) {
-            value = 0;
+	public static void main(String[] args) throws InterruptedException {
 
-            Thread thread1 = new Thread(() -> {
-                for (int i = 0; i < 1000; i++) {
-                	increment();
-                }
-            });
+		for (int t = 0; t < 10; t++) {
+			value = 0;
 
-            Thread thread2 = new Thread(() -> {
-                for (int i = 0; i < 1000; i++) {
-                	increment();
-                }
-            });
+			Thread thread1 = new Thread(() -> {
+				for (int i = 0; i < 1000; i++) {
+					increment();
+				}
+			});
 
-            thread1.start();
-            thread2.start();
+			Thread thread2 = new Thread(() -> {
+				for (int i = 0; i < 1000; i++) {
+					increment();
+				}
+			});
 
-            thread1.join();
-            thread2.join();
+			thread1.start();
+			thread2.start();
 
-            System.out.println("shared value = " + value);
-        }
+			thread1.join();
+			thread2.join();
 
-    }
+			System.out.println("shared value = " + value);
+		}
+
+	}
 }
