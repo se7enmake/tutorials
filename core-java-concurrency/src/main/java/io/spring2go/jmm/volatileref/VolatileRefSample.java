@@ -27,7 +27,7 @@ public class VolatileRefSample {
 
     public static void main(String[] args) throws InterruptedException {
 
-        for (int i = 0; i < 10000; i++) {
+        for (int i = 0; i < 20000; i++) {
             int m = i;
             int n = i;
             //writer
